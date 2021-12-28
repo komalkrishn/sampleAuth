@@ -39,19 +39,19 @@ const {width} = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
     wrapper: {
-        position: 'absolute',
-        bottom: 20,
-        width,
-        alignItems: 'center',
-        justifyContent: 'center'
+        // position: 'absolute',
+        // bottom: 20,
+        // width,
+        // alignItems: 'center',
+        // justifyContent: 'center'
     },
     container: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: 250,
-        backgroundColor: 'green',
-        borderRadius: 100,
-        elevation: 2,
+        // flexDirection: 'row',
+        // justifyContent: 'space-between',
+        // width: 250,
+        // backgroundColor: 'green',
+        // borderRadius: 100,
+        // elevation: 2,
     }
 })
 export default TabBar;
