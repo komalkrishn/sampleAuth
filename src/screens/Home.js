@@ -1,31 +1,47 @@
-import React, {useState, useEffect} from 'react'
-import {  StyleSheet, Text, View } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useState, useEffect} from 'react';
+import { useNavigation } from '@react-navigation/core';
+import { StyleSheet, Text, View, KeyboardAvoidingView, TextInput, TouchableOpacity } from 'react-native'
+import {auth} from '../../firebase';
 
+ 
 
-export default function Home({navigation, route}) {
-    const [welcomeNote, setWelcomeNote] = useState('');
-    
-    useEffect(() => {
-       getData();
-    }, [])
-    const getData=()=>{
-        try {
-           AsyncStorage.getItem('Username').then(value =>{
-               if(value !=null){
-                //    setHomeNote(value);
-                navigation.navigate('Home')
-               }
-           })
-        } catch (error) {
-            console.log(error);
-        }
+export default function Home() {
+    const navigation = useNavigation();
+
+    const handleLogOut =()=>{
+        auth.signOut()
+             .then(()=>{
+                navigation.replace('Login')
+             })
+             .catch(error =>alert(error.message))
     }
     return (
-        <View>
-            <Text> welcome{welcomeNote}</Text>
+        <View style={styles.homeContainer}>
+            <Text> Email {auth.currentUser?.email}</Text>
+            <TouchableOpacity style={styles.button} onPress={handleLogOut} >
+            <Text style={styles.buttonText}>Log Out </Text>
+
+          </TouchableOpacity>
         </View>
     )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    homeContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    button: {
+        backgroundColor: 'blue',
+        width: '50%',
+        padding: 15,
+        borderRadius: 10,
+        alignItems: 'center'
+      },
+      buttonText: {
+        color: 'black',
+        fontWeight: '600',
+        fontSize: 15
+      },
+})

@@ -1,216 +1,138 @@
-// import React, { useState, useEffect } from "react";
-// import {
-//   StyleSheet,
-//   View,
-//   TextInput,
-//   Button,
-//   Alert,
-//   Image,
-// } from "react-native";
-// import { FontAwesome } from '@expo/vector-icons';
-// import Logo from "../../assets/goGreenLogo.png";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-// import {getAuth,signInWithEmailAndPassword, createUserWithEmailAndPassword ,signInWithPopup,signOut, GoogleAuthProvider } from "firebase/auth";
-
-
-// export default function Login({ navigation, login }) {
-//   const schema = {email: '', password : ''};
-//   const [cred,setCred] = useState(schema);
-
-//   const provider = new GoogleAuthProvider();
-//   const auth = getAuth();
-//   const[user,Setuser] = useState(() => auth.currentUser)
-//   const[init,SetInit] = useState(true)
-
- 
-
-//   useEffect(()=>{
-//     const unsubscribe = auth.onAuthStateChanged(u =>{
-//       if(u){Setuser(u)}else{Setuser(null)}
-//       if(init){setTimeout(()=>{SetInit(false)},200)}
-//     return unsubscribe;
-
-//     })
-//   },[]);
-
-//   const handleEmailChange =(e)=>{
-//     cred.email =  e;
-   
-//   }
-//   const handlePassChange =(e)=>{
-//     cred.password =  e;
-    
-//   }
-
-//  const handleSubmit=()=>{
-//   console.log(cred)
-//  }
-
-
-//  function LOGINEnPAccount(){
-//   signInWithEmailAndPassword(auth, cred.email, cred.password)
-//  .then((userCredential) => {setCred(userCredential.user)})
-//  .catch((error) => {
-//    const errorCode = error.code;
-//    const errorMessage = error.message;
-//  });
-
-// }
-
-//  function CreateEnPAccount(){
-//   createUserWithEmailAndPassword(auth, cred.email, cred.password)
-//  .then((userCredential) => {Setuser(userCredential.user)})
-//  .catch((error) => {
-//    const errorCode = error.code;
-//    const errorMessage = error.message;
-   
-//  });
-
-// }
-
-//   return (
-//     <View style={styles.body}>
-//       <Image source={Logo} style={styles.logo} resizeMode="contain" />
-
-//       <TextInput
-//         style={styles.input}
-//         placeholder="UserName"
-//         onChangeText={handleEmailChange}
-//         // value={cred.email}
-//         // name="email"
-//       />
-//       <TextInput
-//         style={styles.input}
-//         placeholder="Password"
-//         secureTextEntry
-//         onChangeText={handlePassChange}
-//         // value={cred.password}
-//         // name="password"
-
-//       />
-
-//       {/* <Button title="Login" onPress={LOGINEnPAccount} /> */}
-//       <Button title="Signup" onPress={CreateEnPAccount} />
-//       {/* <View style={styles.buttons}> */}
-
-// {/* <FontAwesome.Button name="apple" backgroundColor="grey" onPress={siginApple}>
-//   Sign in with Apple
-// </FontAwesome.Button> */}
-// <FontAwesome.Button name="google" backgroundColor="pink" onPress={login}>
-//   Sign in with google
-// </FontAwesome.Button>
-// {/* <FontAwesome.Button name="facebook" backgroundColor="#3b5998" onPress={siginFacebook}>
-//   Sign in with Facebook
-// </FontAwesome.Button> */}
-//       {/* </View> */}
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   body: {
-//     flex: 1,
-//     alignItems: "center",
-//     // backgroundColor: "#0080ff",
-    
-//   },
-//   logo: {
-//     width: 100,
-//     height: 200,
-//     alignItems: 'center',
-   
-//   },
-//   input: {
-//     height: 40,
-//     margin: 12,
-//     borderWidth: 1,
-//     padding: 10,
-//   },
-//   buttons: {
-//     flex: 1,
-//     margin: 10,
-//   },
-//   button1: {
-//     margin: 65,
-//   },
-// });
-
 import React, { useState, useEffect } from "react";
+import { useNavigation } from "@react-navigation/core";
 import {
   StyleSheet,
+  Text,
   View,
+  KeyboardAvoidingView,
   TextInput,
-  Button,
+  TouchableOpacity,
   Alert,
-  Image,
 } from "react-native";
-import { FontAwesome } from '@expo/vector-icons';
-import Logo from "../../assets/goGreenLogo.png";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {getAuth ,signInWithPopup,signOut, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "../../firebase";
 
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigation = useNavigation();
 
-export default function Login({ navigation, login,SEP,credSet,CreateEP}) {
+  //check if user is logged in or not and when we leave the screen it will unsubscribe from the listener
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.replace("Home");
+      }
+    });
+    return unsubscribe;
+  }, []);
 
-
- 
-
+  const handleSignUp = () => {
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userCreden) => {
+        const user = userCreden.user;
+        console.log(user.email);
+      })
+      .catch((error) => alert(error.message));
+  };
+  const handleLogin = (text) => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (reg.test(text) === false) {
+      Alert.alert("Email is Not Correct");
+      setEmail({ email: text });
+      return false;
+    } else {
+      setEmail({ email: text });
+      console.log("Email is Correct");
+    }
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then((userCreden) => {
+        const user = userCreden.user;
+        console.log(`login with...${user.email}`);
+      })
+      .catch((error) => alert(error.message));
+  };
 
   return (
-    <View style={styles.body}>
-      <Image source={Logo} style={styles.logo} resizeMode="contain" />
-
-      <TextInput
-        style={styles.input}
-        placeholder="UserName"
-        onChangeText={(e)=>{credSet(prev=>({...prev,email:e}))}}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        onChangeText={(e)=>{credSet(prev=>({...prev,password:e}))}}
-
-      />
-
-<Button title="SignIn" onPress={SEP} />
-      {/* <Button title="Signup" onPress={CreateEP} /> */}
-     
-
-
-<FontAwesome.Button name="google" backgroundColor="pink" onPress={login}>
-  Sign in with google
-</FontAwesome.Button>
-
-    </View>
+    <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          style={styles.input}
+          secureTextEntry
+        />
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, styles.buttonOutline]}
+          onPress={handleSignUp}
+        >
+          <Text style={styles.buttonOutlineText}>Signup </Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
+};
 
-}
+export default Login;
+
 const styles = StyleSheet.create({
-  body: {
+  container: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "#0080ff",
-    
   },
-  logo: {
-    width: 100,
-    height: 200,
-    alignItems: 'center',
-   
+  inputContainer: {
+    width: "80%",
+    marginTop: 100,
   },
   input: {
-    height: 40,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
+    color: "black",
+    backgroundColor: "green",
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 15,
+    marginTop: 5,
   },
-  buttons: {
-    flex: 1,
-    margin: 10,
+  buttonContainer: {
+    width: "60%",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 30,
   },
-  button1: {
-    margin: 65,
+  button: {
+    backgroundColor: "blue",
+    width: "100%",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "black",
+    fontWeight: "600",
+    fontSize: 15,
+  },
+  buttonOutline: {
+    backgroundColor: "white",
+    marginTop: 5,
+    borderColor: "green",
+    borderWidth: 2,
+  },
+  buttonOutlineText: {
+    color: "blue",
+    fontWeight: "600",
+    fontSize: 15,
   },
 });
-
