@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function Home({navigation, route}) {
-    const [homeNote, setHomeNote] = useState('');
+    const [welcomeNote, setWelcomeNote] = useState('');
     
     useEffect(() => {
        getData();
@@ -23,7 +23,7 @@ export default function Home({navigation, route}) {
     }
     return (
         <View>
-            <Text> welcome{homeNote}</Text>
+            <Text> welcome{welcomeNote}</Text>
         </View>
     )
 }

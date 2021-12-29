@@ -2,9 +2,7 @@ import React, {useState} from 'react';
 import { StyleSheet, Image, View, ScrollView } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-// import Logo from '../../../assets/goGreenLogo.png';
-import CustomInput from '../components/customInput/CustomInput';
-import CustomButton from '../components/customButton/CustomButton';
+
 
 const SignInScreen=({navigation})=> {
     const [userName, setUserName] = useState('');
