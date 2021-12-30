@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { FontAwesome } from '@expo/vector-icons';
+
 import { auth } from "../../firebase";
 
 const Login = () => {
@@ -35,16 +37,7 @@ const Login = () => {
       })
       .catch((error) => alert(error.message));
   };
-  const handleLogin = (text) => {
-    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
-    if (reg.test(text) === false) {
-      Alert.alert("Email is Not Correct");
-      setEmail({ email: text });
-      return false;
-    } else {
-      setEmail({ email: text });
-      console.log("Email is Correct");
-    }
+  const handleLogin = () => {
     auth
       .signInWithEmailAndPassword(email, password)
       .then((userCreden) => {
@@ -81,6 +74,10 @@ const Login = () => {
         >
           <Text style={styles.buttonOutlineText}>Signup </Text>
         </TouchableOpacity>
+
+        <FontAwesome.Button name="google" backgroundColor="pink">
+   Sign in with google
+ </FontAwesome.Button>
       </View>
     </KeyboardAvoidingView>
   );
@@ -100,6 +97,7 @@ const styles = StyleSheet.create({
   },
   input: {
     color: "black",
+    fontWeight: 'bold',
     backgroundColor: "green",
     paddingHorizontal: 15,
     paddingVertical: 10,
