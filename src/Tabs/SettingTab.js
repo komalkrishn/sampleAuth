@@ -17,8 +17,8 @@ const SettingTab = () => {
       .catch((error) => alert(error.message));
   };
     return (
-        <View>
-             <Text> Email {auth.currentUser?.email}</Text>
+        <View style={styles.container}>
+             <Text style={styles.textEmail}> User Email: {auth.currentUser?.email}</Text>
       <TouchableOpacity style={styles.button} onPress={handleLogOut}>
         <Text style={styles.buttonText}>Log Out </Text>
       </TouchableOpacity>
@@ -29,15 +29,27 @@ const SettingTab = () => {
 export default SettingTab
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#213743'
+  },
+  textEmail: {
+    margin: 20,
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 15
+  },
     button: {
-    backgroundColor: "blue",
+    backgroundColor: "#cc46b9",
     width: "50%",
     padding: 15,
     borderRadius: 10,
     alignItems: "center",
   },
   buttonText: {
-    color: "black",
+    color: "white",
     fontWeight: "600",
     fontSize: 15,
   },
