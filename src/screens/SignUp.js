@@ -13,7 +13,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import { auth } from "../../firebase";
 
-const Login = () => {
+const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
@@ -29,24 +29,28 @@ const Login = () => {
   }, []);
 
   const handleSignUp = () => {
-    navigation.navigate("Signup")
+    if(password.length > 8){
+        auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((userCreden) => {
+          const user = userCreden.user;
+          console.log(user.email);
+        })
+        .catch((error) => alert(error.message));
+    }
+    else {
+        Alert.alert('password char should be min 8 char')
+    }
+   
   };
   const handleLogin = () => {
-    
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then((userCreden) => {
-        const user = userCreden.user;
-        console.log(`login with...${user.email}`);
-      })
-      .catch((error) => alert(error.message));
+   navigation.navigate("Login")
   };
 
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <View style={styles.inputContainer}>
-       <Text>Login</Text>
-
+      <Text>Signup</Text>
         <TextInput
           placeholder="Email"
           value={email}
@@ -62,12 +66,17 @@ const Login = () => {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Login </Text>
+
+      <TouchableOpacity
+          style={[styles.button, styles.buttonOutline]}
+          onPress={handleSignUp}
+        >
+          <Text style={styles.buttonOutlineText}>Signup </Text>
         </TouchableOpacity>
+        
+          <Text style={styles.buttonText} onPress={handleLogin}>Login </Text>
          
-          <Text style={styles.buttonOutlineText} onPress={handleSignUp} >Signup </Text>
-         
+        
 
         <FontAwesome.Button name="google" backgroundColor="pink">
    Sign in with google
@@ -77,7 +86,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
